@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { createNewUser, getUserByEmail } from "@/utils/actions";
 import { CreateUser } from "@/common.types";
+import { sendEmail } from "@/utils/mailer";
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -27,7 +28,14 @@ export const POST = async (request: NextRequest) => {
       password: hashedPassword,
     };
 
-    const savedUser = createNewUser(createUser);
+    const savedUser = await createNewUser(createUser);
+
+    //send verification email
+    await sendEmail({
+      email,
+      emailType: "VERIFY",
+      userId: savedUser._id,
+    });
 
     return NextResponse.json({
       message: "User created successfully",
