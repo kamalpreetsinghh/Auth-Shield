@@ -1,12 +1,23 @@
-import mongoose from "mongoose";
+import mongoose, { ConnectOptions } from "mongoose";
+
+let isConnected = false;
 
 export const connectDB = async () => {
+  mongoose.set("strictQuery", true);
+  if (isConnected) {
+    return;
+  }
+
   try {
-    await mongoose.connect(process.env.MONGODB_URI!, { dbName: "streamify" });
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      dbName: "streamify",
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    } as ConnectOptions);
     const connection = mongoose.connection;
 
     connection.on("connected", () => {
-      console.log("MongoDB connected successfully");
+      isConnected = true;
     });
 
     connection.on("error", (error) => {

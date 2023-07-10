@@ -38,7 +38,7 @@ const SignUpPage = () => {
 
       router.push("/login");
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error("User with this email already exists");
     } finally {
       setLoading(false);
     }

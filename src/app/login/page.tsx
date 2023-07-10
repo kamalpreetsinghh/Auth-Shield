@@ -34,7 +34,8 @@ const LoginPage = () => {
 
       router.push("/profile");
     } catch (error: any) {
-      toast.error(error.message);
+      console.log(error.response.status);
+      toast.error("Incorrect Username or password");
     } finally {
       setLoading(false);
     }
@@ -67,6 +68,9 @@ const LoginPage = () => {
         <button type="submit" disabled={buttonDisabled} className="button">
           Login
         </button>
+        <Link href="/forgotpassword" className="button text-center">
+          Forgot Password
+        </Link>
         <Toaster />
       </form>
 

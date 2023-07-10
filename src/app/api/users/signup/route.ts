@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { createNewUser, getUserByEmail } from "@/utils/actions";
-import { CreateUser } from "@/common.types";
+import { CreateUser, EmailTypes } from "@/common.types";
 import { sendEmail } from "@/utils/mailer";
 
 export const POST = async (request: NextRequest) => {
@@ -33,7 +33,7 @@ export const POST = async (request: NextRequest) => {
     //send verification email
     await sendEmail({
       email,
-      emailType: "VERIFY",
+      emailType: EmailTypes.VERIFY,
       userId: savedUser._id,
     });
 
@@ -43,6 +43,6 @@ export const POST = async (request: NextRequest) => {
       savedUser,
     });
   } catch (error: any) {
-    NextResponse.json({ error: error.msg }, { status: 500 });
+    return NextResponse.json({ error: error.msg }, { status: 500 });
   }
 };

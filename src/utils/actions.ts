@@ -14,6 +14,22 @@ export const getUserById = async (id: string) => {
   return user;
 };
 
+export const updateUserVerifyToken = async (verifyToken: string) => {
+  const user = await User.findOne({
+    verifyToken,
+    verifyTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (user) {
+    user.isVerified = true;
+    user.verifyToken = undefined;
+    user.verifyTokenExpiry = undefined;
+    await user.save();
+  }
+
+  return user;
+};
+
 export const createNewUser = async (createUser: CreateUser) => {
   const savedUser = await User.create(createUser);
   return savedUser;

@@ -1,27 +1,16 @@
-import { connectDB } from "@/dbConfig/dbConfig";
-import User from "@/models/userModel";
+import { updateUserVerifyToken } from "@/utils/actions";
 import { NextRequest, NextResponse } from "next/server";
-
-connectDB();
 
 export const POST = async (request: NextRequest) => {
   try {
     const requestBody = await request.json();
     const { token } = requestBody;
 
-    const user = await User.findOne({
-      verifyToken: token,
-      verifyTokenExpiry: { $gt: Date.now() },
-    });
+    const updatedUser = await updateUserVerifyToken(token);
 
-    if (!user) {
+    if (!updatedUser) {
       return NextResponse.json({ error: "Invalid token" }, { status: 400 });
     }
-
-    user.isVerfied = true;
-    user.verifyToken = undefined;
-    user.verifyTokenExpiry = undefined;
-    await user.save();
 
     return NextResponse.json({
       message: "Email verified successfully",
