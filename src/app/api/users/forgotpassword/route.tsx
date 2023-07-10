@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    //send verification email
+    //send password reset email
     await sendEmail({
       email,
       emailType: EmailTypes.RESET,
